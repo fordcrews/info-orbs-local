@@ -40,10 +40,9 @@
 
 // Not all digits in DSEG7/14 are aligned identically, therefore we need to offset them
 #ifndef CLOCK_DIGITS_OFFSET
-    #define CLOCK_DIGITS_OFFSET                                                                 \
-        {                                                                                       \
-            {0, 0}, {1, -5}, {0, 0}, {1, 0}, {0, -5}, {0, 0}, {0, 0}, {0, -5}, {0, 0}, { 0, 0 } \
-        }
+    #define CLOCK_DIGITS_OFFSET \
+        {                       \
+            {0, 0}, {1, -5}, {0, 0}, {1, 0}, {0, -5}, {0, 0}, {0, 0}, {0, -5}, {0, 0}, {0, 0}}
 // Use zero offset for other fonts (or adjust)
 // #define CLOCK_DIGITS_OFFSET { {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0} }
 #endif
@@ -93,12 +92,12 @@ private:
     int m_digitAnimationNew[5];
     int m_digitAnimationCurrent[5];
     int m_digitAnimationStep[5];
-    bool m_updateAlternate = false;  // Tracks whether to update even or odd digits
+    bool m_updateAlternate = false; // Tracks whether to update even or odd digits
 
     // Glitch control
     bool m_glitchEnabledForDigit[5] = {false, false, false, false, false}; // If true, next animation on this digit will glitch
-    bool m_glitchActiveForDigit[5] = {false, false, false, false, false};  // Glitch currently happening
-    int m_glitchStepsRemaining[5];  // How many glitch steps left for the current glitch
+    bool m_glitchActiveForDigit[5] = {false, false, false, false, false}; // Glitch currently happening
+    int m_glitchStepsRemaining[5]; // How many glitch steps left for the current glitch
     unsigned long m_nextGlitchTime = 0;
 
     const unsigned long DIGIT_ANIMATION_STEP_DURATION = 10; // ms per step

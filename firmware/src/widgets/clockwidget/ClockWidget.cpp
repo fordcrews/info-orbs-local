@@ -20,13 +20,12 @@ void ClockWidget::setup() {
 
 void ClockWidget::triggerRandomGlitch() {
     // Pick a random digit out of {0,1,3,4}
-    int possibleDigits[4] = {0,1,3,4};
-    int d = possibleDigits[random(0,4)];
+    int possibleDigits[4] = {0, 1, 3, 4};
+    int d = possibleDigits[random(0, 4)];
     m_glitchEnabledForDigit[d] = true;
     // Next glitch in another 30-60 seconds
     m_nextGlitchTime = millis() + random(30000, 60000);
 }
-
 
 void ClockWidget::startDigitAnimation(int index, int oldDigit, int newDigit) {
     m_digitAnimating[index] = true;
@@ -45,11 +44,12 @@ void ClockWidget::startDigitAnimation(int index, int oldDigit, int newDigit) {
 void ClockWidget::startGlitchForDigit(int index) {
     m_glitchActiveForDigit[index] = true;
     // Let's say we do 3-5 glitch steps
-    m_glitchStepsRemaining[index] = random(3,6); 
+    m_glitchStepsRemaining[index] = random(3, 6);
 }
 
 bool ClockWidget::updateDigitAnimation(int index, unsigned long now) {
-    if (!m_digitAnimating[index]) return false;
+    if (!m_digitAnimating[index])
+        return false;
 
     unsigned long elapsed = now - m_digitAnimationStart[index];
 
@@ -77,7 +77,7 @@ bool ClockWidget::updateDigitAnimation(int index, unsigned long now) {
             m_digitAnimationCurrent[index] = 9;
         } else {
             // Subsequent steps: decrement by 1 or 2 (based on performance setting)
-            int step = 3;  // Set to 2 to skip every other digit for faster transitions
+            int step = 3; // Set to 2 to skip every other digit for faster transitions
             m_digitAnimationCurrent[index] = (m_digitAnimationCurrent[index] - step + 10) % 10;
 
             // Stop animation if target digit is reached
@@ -90,15 +90,18 @@ bool ClockWidget::updateDigitAnimation(int index, unsigned long now) {
     return m_digitAnimating[index];
 }
 
-
 int ClockWidget::getCurrentDisplayedDigit(int index) {
     if (!m_digitAnimating[index]) {
         // Not animating: return the final digit
         switch (index) {
-            case 0: return (m_hourSingle < 10 && FORMAT_24_HOUR) ? 0 : (m_hourSingle / 10);
-            case 1: return (m_hourSingle % 10);
-            case 3: return (m_minuteSingle < 10) ? 0 : (m_minuteSingle / 10);
-            case 4: return (m_minuteSingle % 10);
+        case 0:
+            return (m_hourSingle < 10 && FORMAT_24_HOUR) ? 0 : (m_hourSingle / 10);
+        case 1:
+            return (m_hourSingle % 10);
+        case 3:
+            return (m_minuteSingle < 10) ? 0 : (m_minuteSingle / 10);
+        case 4:
+            return (m_minuteSingle % 10);
         }
     } else {
         if (m_glitchActiveForDigit[index]) {
@@ -113,8 +116,6 @@ int ClockWidget::getCurrentDisplayedDigit(int index) {
     // Default fallback
     return 0;
 }
-
-
 
 void ClockWidget::draw(bool force) {
     m_manager.setFont(CLOCK_FONT);
@@ -167,8 +168,8 @@ void ClockWidget::draw(bool force) {
 
         // Render second hand if enabled
 #if SHOW_SECOND_TICKS == true
-        displaySeconds(2, m_lastSecondSingle, TFT_BLACK);  // Erase previous position
-        displaySeconds(2, m_secondSingle, CLOCK_COLOR);    // Draw at new position
+        displaySeconds(2, m_lastSecondSingle, TFT_BLACK); // Erase previous position
+        displaySeconds(2, m_secondSingle, CLOCK_COLOR); // Draw at new position
 #endif
 
         m_lastSecondSingle = m_secondSingle;
@@ -177,10 +178,10 @@ void ClockWidget::draw(bool force) {
     // Handle AM/PM indicator (if applicable)
     if (!FORMAT_24_HOUR && SHOW_AM_PM_INDICATOR && m_type != ClockType::NIXIE) {
         if (m_amPm != m_lastAmPm) {
-            displayAmPm(m_lastAmPm, TFT_BLACK);  // Erase previous
+            displayAmPm(m_lastAmPm, TFT_BLACK); // Erase previous
             m_lastAmPm = m_amPm;
         }
-        displayAmPm(m_amPm, CLOCK_COLOR);  // Draw current
+        displayAmPm(m_amPm, CLOCK_COLOR); // Draw current
     }
 }
 
@@ -373,7 +374,7 @@ void ClockWidget::displayNixie(int displayIndex, const String &digit) {
     if (digit.length() != 1) {
         return;
     }
-    
+
     m_manager.selectScreen(displayIndex);
     TJpgDec.setJpgScale(1);
     switch (digit.charAt(0)) {
