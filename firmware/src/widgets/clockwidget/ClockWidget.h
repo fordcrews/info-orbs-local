@@ -86,6 +86,31 @@ public:
     String getName() override;
 
 private:
+    // Animation states per digit index (0,1,3,4 for hour/minute digits)
+    bool m_digitAnimating[5] = {false, false, false, false, false};
+    unsigned long m_digitAnimationStart[5];
+    int m_digitAnimationOld[5];
+    int m_digitAnimationNew[5];
+    int m_digitAnimationCurrent[5];
+    int m_digitAnimationStep[5];
+    bool m_updateAlternate = false;  // Tracks whether to update even or odd digits
+
+    // Glitch control
+    bool m_glitchEnabledForDigit[5] = {false, false, false, false, false}; // If true, next animation on this digit will glitch
+    bool m_glitchActiveForDigit[5] = {false, false, false, false, false};  // Glitch currently happening
+    int m_glitchStepsRemaining[5];  // How many glitch steps left for the current glitch
+    unsigned long m_nextGlitchTime = 0;
+
+    const unsigned long DIGIT_ANIMATION_STEP_DURATION = 10; // ms per step
+    const unsigned long GLITCH_STEP_DURATION = 10; // ms per glitch step
+
+    void startDigitAnimation(int index, int oldDigit, int newDigit);
+    bool updateDigitAnimation(int index, unsigned long now);
+    void triggerRandomGlitch();
+    void startGlitchForDigit(int index);
+
+    int getCurrentDisplayedDigit(int index); // returns current digit for display
+
     void change24hMode();
     void displayDigit(int displayIndex, const String &lastDigit, const String &digit, uint32_t color, bool shadowing);
     void displayDigit(int displayIndex, const String &lastDigit, const String &digit, uint32_t color);
@@ -103,7 +128,7 @@ private:
     int m_timeZoneOffset;
 
     // Delays for setting how often certain screens/functions are refreshed/checked. These include both the frequency which they need to be checked and a varibale to store the last checked value.
-    unsigned long m_secondTimer = 2000; // This time is used to refressh/check the clock every second.
+    unsigned long m_secondTimer = 1000; // This time is used to refressh/check the clock every second.
     unsigned long m_secondTimerPrev = 0;
 
     int m_minuteSingle;
